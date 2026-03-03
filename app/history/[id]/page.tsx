@@ -12,7 +12,7 @@ export default async function SessionDetailPage({ params }: { params: { id: stri
 
   if (!session) return notFound();
 
-  const totalVolume = session.entries.reduce((sum, e) => sum + e.sets * e.reps * e.weightKg, 0);
+  const totalVolume = session.entries.reduce<number>((sum: number, e) => sum + e.sets * e.reps * e.weightKg, 0);
 
   return (
     <div className="space-y-4 rounded-xl border border-border bg-card p-4">

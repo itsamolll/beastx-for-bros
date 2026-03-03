@@ -27,7 +27,9 @@ export default async function ProgressPage() {
     const start = startOfWeek(subWeeks(now, i), { weekStartsOn: 1 });
     const end = endOfWeek(subWeeks(now, i), { weekStartsOn: 1 });
     const weekSessions = await prisma.workoutSession.findMany({ where: { date: { gte: start, lte: end } }, include: { entries: true } });
-    const volume = weekSessions.flatMap((s) => s.entries).reduce((sum, e) => sum + e.sets * e.reps * e.weightKg, 0);
+    const volume = weekSessions
+      .flatMap((sessionItem) => sessionItem.entries)
+      .reduce<number>((sum: number, e) => sum + e.sets * e.reps * e.weightKg, 0);
     weeklyVolume.push({ weekLabel: `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`, volume });
   }
 
