@@ -7,29 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Goal {
-  fat_loss
-  muscle_gain
-  strength
-  maintenance
-}
 
-enum MuscleGroup {
-  chest
-  back
-  legs
-  shoulders
-  arms
-  full_body
-  rest
-}
 
 model UserProfile {
   id        Int      @id @default(autoincrement())
   age       Int
   heightCm  Float
   weightKg  Float
-  goal      Goal
+  goal      String
   bmi       Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -42,7 +27,7 @@ model WeeklySplit {
   id          Int         @id @default(autoincrement())
   userId      Int
   weekday     Int
-  muscleGroup MuscleGroup
+  muscleGroup String
   createdAt   DateTime    @default(now())
 
   user UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -53,7 +38,7 @@ model WeeklySplit {
 model ExerciseLibrary {
   id             Int                   @id @default(autoincrement())
   name           String                @unique
-  muscleGroup    MuscleGroup
+  muscleGroup    String
   gifUrl         String
   suggestedSets  Int
   suggestedReps  String

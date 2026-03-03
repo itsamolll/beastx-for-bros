@@ -1,8 +1,4 @@
--- CreateEnum
-CREATE TYPE "Goal" AS ENUM ('fat_loss', 'muscle_gain', 'strength', 'maintenance');
 
--- CreateEnum
-CREATE TYPE "MuscleGroup" AS ENUM ('chest', 'back', 'legs', 'shoulders', 'arms', 'full_body', 'rest');
 
 -- CreateTable
 CREATE TABLE "UserProfile" (
@@ -10,7 +6,7 @@ CREATE TABLE "UserProfile" (
     "age" INTEGER NOT NULL,
     "heightCm" DOUBLE PRECISION NOT NULL,
     "weightKg" DOUBLE PRECISION NOT NULL,
-    "goal" "Goal" NOT NULL,
+    "goal" TEXT NOT NULL,
     "bmi" DOUBLE PRECISION NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -23,7 +19,7 @@ CREATE TABLE "WeeklySplit" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "weekday" INTEGER NOT NULL,
-    "muscleGroup" "MuscleGroup" NOT NULL,
+    "muscleGroup" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "WeeklySplit_pkey" PRIMARY KEY ("id")
@@ -33,7 +29,7 @@ CREATE TABLE "WeeklySplit" (
 CREATE TABLE "ExerciseLibrary" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "muscleGroup" "MuscleGroup" NOT NULL,
+    "muscleGroup" TEXT NOT NULL,
     "gifUrl" TEXT NOT NULL,
     "suggestedSets" INTEGER NOT NULL,
     "suggestedReps" TEXT NOT NULL,
