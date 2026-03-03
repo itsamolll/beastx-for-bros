@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -51,16 +51,16 @@ model WeeklySplit {
 }
 
 model ExerciseLibrary {
-  id             Int                      @id @default(autoincrement())
-  name           String                   @unique
+  id             Int                   @id @default(autoincrement())
+  name           String                @unique
   muscleGroup    MuscleGroup
   gifUrl         String
   suggestedSets  Int
   suggestedReps  String
-  createdAt      DateTime                 @default(now())
+  createdAt      DateTime              @default(now())
   workoutEntries WorkoutExerciseEntry[]
-  alternativesTo ExerciseAlternative[]    @relation("ExerciseAlternativeFrom")
-  alternatives   ExerciseAlternative[]    @relation("ExerciseAlternativeTo")
+  alternativesTo ExerciseAlternative[] @relation("ExerciseAlternativeFrom")
+  alternatives   ExerciseAlternative[] @relation("ExerciseAlternativeTo")
 }
 
 model ExerciseAlternative {
@@ -75,26 +75,26 @@ model ExerciseAlternative {
 }
 
 model WorkoutSession {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  date        DateTime @default(now())
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      DateTime @default(now())
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user    UserProfile            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    UserProfile          @relation(fields: [userId], references: [id], onDelete: Cascade)
   entries WorkoutExerciseEntry[]
 }
 
 model WorkoutExerciseEntry {
-  id          Int      @id @default(autoincrement())
-  sessionId   Int
-  exerciseId  Int
-  sets        Int
-  reps        Int
-  weightKg    Float
-  notes       String?
-  createdAt   DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  sessionId  Int
+  exerciseId Int
+  sets       Int
+  reps       Int
+  weightKg   Float
+  notes      String?
+  createdAt  DateTime @default(now())
 
   session  WorkoutSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   exercise ExerciseLibrary @relation(fields: [exerciseId], references: [id], onDelete: Restrict)

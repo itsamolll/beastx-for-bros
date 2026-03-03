@@ -1,6 +1,6 @@
 # Beast X (Gym Tracker) 🏋️
 
-Production-ready MVP gym tracker built with **Next.js App Router**, **TypeScript**, **TailwindCSS**, **Prisma**, and **SQLite**.
+Production-ready MVP gym tracker built with **Next.js App Router**, **TypeScript**, **TailwindCSS**, **Prisma**, and **PostgreSQL** (Vercel Postgres / Neon / Supabase compatible).
 
 ## Features
 
@@ -17,32 +17,34 @@ Production-ready MVP gym tracker built with **Next.js App Router**, **TypeScript
 - Next.js 14 (App Router)
 - TypeScript
 - Tailwind CSS
-- Prisma ORM + SQLite
+- Prisma ORM + PostgreSQL
 - Zod for validation
 
 ## Setup
 
-1. Install dependencies
+1. Create a Postgres database (Vercel Postgres recommended) and copy its connection string.
+
+2. Install dependencies
    ```bash
    npm install
    ```
-2. Copy environment file
+3. Copy environment file
    ```bash
    cp .env.example .env
    ```
-3. Run migrations
+4. Run migrations
    ```bash
    npm run prisma:migrate
    ```
-4. Generate Prisma client
+5. Generate Prisma client
    ```bash
    npm run prisma:generate
    ```
-5. Seed exercise library
+6. Seed exercise library
    ```bash
    npm run prisma:seed
    ```
-6. Start dev server
+7. Start dev server
    ```bash
    npm run dev
    ```
@@ -50,9 +52,10 @@ Production-ready MVP gym tracker built with **Next.js App Router**, **TypeScript
 
 ## Deployment Notes
 
-- This app uses **Prisma + SQLite**. For many serverless platforms, SQLite file writes are ephemeral; prefer a persistent SQL provider for production scale.
+- This project is configured for **Prisma + PostgreSQL** in both local and deployment environments.
+- Set `DATABASE_URL` in Vercel Project Settings → Environment Variables for Preview and Production.
+- Prisma client is generated in `postinstall` and also during `build` to avoid missing-client deployment failures.
 - Pages that read Prisma are configured as dynamic (`force-dynamic`) and Node runtime to avoid build-time prerender DB errors.
-- Ensure `DATABASE_URL` is set in deployment env vars.
 
 ## Data Model Notes
 
