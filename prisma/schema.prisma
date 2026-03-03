@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Goal {
+  fat_loss
+  muscle_gain
+  strength
+  maintenance
+}
+
+enum MuscleGroup {
+  chest
+  back
+  legs
+  shoulders
+  arms
+  full_body
+  rest
+}
+
+model UserProfile {
+  id        Int      @id @default(autoincrement())
+  age       Int
+  heightCm  Float
+  weightKg  Float
+  goal      Goal
+  bmi       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  weeklySplits WeeklySplit[]
+  sessions     WorkoutSession[]
+}
+
+model WeeklySplit {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  weekday     Int
+  muscleGroup MuscleGroup
+  createdAt   DateTime    @default(now())
+
+  user UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekday])
+}
+
+model ExerciseLibrary {
+  id             Int                      @id @default(autoincrement())
+  name           String                   @unique
+  muscleGroup    MuscleGroup
+  gifUrl         String
+  suggestedSets  Int
+  suggestedReps  String
+  createdAt      DateTime                 @default(now())
+  workoutEntries WorkoutExerciseEntry[]
+  alternativesTo ExerciseAlternative[]    @relation("ExerciseAlternativeFrom")
+  alternatives   ExerciseAlternative[]    @relation("ExerciseAlternativeTo")
+}
+
+model ExerciseAlternative {
+  id            Int @id @default(autoincrement())
+  exerciseId    Int
+  alternativeId Int
+
+  exercise    ExerciseLibrary @relation("ExerciseAlternativeFrom", fields: [exerciseId], references: [id], onDelete: Cascade)
+  alternative ExerciseLibrary @relation("ExerciseAlternativeTo", fields: [alternativeId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, alternativeId])
+}
+
+model WorkoutSession {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  date        DateTime @default(now())
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user    UserProfile            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries WorkoutExerciseEntry[]
+}
+
+model WorkoutExerciseEntry {
+  id          Int      @id @default(autoincrement())
+  sessionId   Int
+  exerciseId  Int
+  sets        Int
+  reps        Int
+  weightKg    Float
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  session  WorkoutSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise ExerciseLibrary @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+}
